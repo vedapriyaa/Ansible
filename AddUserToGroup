@@ -1,0 +1,14 @@
+---
+- hosts: ans
+  become: true
+  become_user: root
+  
+  tasks:
+      - name: create group
+        group: name=vedagroup state=present
+     
+      - name: create user
+        user: name=fairoz password=redhat state=present
+   
+      - name: add user to group
+        user: name=fairoz group=vedagroup append=yes
