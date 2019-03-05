@@ -1,0 +1,26 @@
+---
+- hosts: ans
+  become: yes
+  become_user: root
+
+  tasks:
+    - name: installing pre-requsites packages
+      yum: name={{ item }} state=latest
+      with_items:
+       - yum-utils
+       - device-mapper-persistent-data
+       - lvm2
+
+    - name: configure docker-ce repo
+      get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+      mode: 0644
+      create: yes
+
+    - name: install docker
+      yum: name=docker-ce state=present
+   
+    - name: start the docker service
+      service: name=docker state=started enabled=yes
+     
