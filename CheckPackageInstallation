@@ -1,0 +1,22 @@
+---
+ - hosts: ans
+   become: true
+   gather_facts: true
+   
+   tasks:
+      - name: check php installation
+        command: php -v
+        register: php_logs
+        ignore_error: true
+      
+      - name: display the logs
+        debug: var=php_logs
+         
+      - name: php installed
+        debug: msg='php is installed'
+        when: php_logs|success
+
+      - name: php not installed
+        debug: mgs='php is not installed'
+        when: php_logs|failed
+

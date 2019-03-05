@@ -1,0 +1,16 @@
+---
+- hosts: ans
+  become: true
+  vars_prompt:
+   - name: "user_name"
+     prompt: "enter user name"
+     
+   - name: "user_password"
+     prompt: "enter password"
+     private: yes
+     encrypt: "md5_crypt"
+     confirm: yes
+  
+  tasks:
+     - name: creating users
+       user: name={{user_name}} password={{user_password}} shell=/bin/bash

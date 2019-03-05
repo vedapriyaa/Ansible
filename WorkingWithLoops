@@ -1,0 +1,24 @@
+---
+- hosts: ans
+  become: true
+  gather_facts: true
+
+  tasks:
+     - name: install packages
+       yum: name={{item}} state=present
+       with_items:
+         - httpd
+         - mariadb
+       register: package_info
+
+     - name: package validation
+       command: httpd -v
+       register: httpd_validation
+       when: package_info|success
+
+     - name: copy static file index.html
+       copy: src=index.html dest=/var/www/html/index.html
+       when: httpd_validation|success
+
+     - name: start httpd service
+       service: name=httpd state=restarted
